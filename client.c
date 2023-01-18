@@ -29,6 +29,30 @@ void    handle_signal(int signal, siginfo_t *client, void *ucontext)
         printf("The server received the string\n");
 }
 
+void    send_size(int pid, int size)
+{
+    int i;
+
+    i = -1;
+    while (++i < 32)
+    {
+        received = 0;
+        if (size & 0x01)
+        {
+            if (kill(pid, SIGUSR1) == -1)
+                error("Error");
+        }
+        else
+        {
+            if (kill(pid, SIGUSR2) == -1)
+                error("Error");
+        }
+        if (!received)
+            pause();
+        size = size >> 1;
+    }
+}
+
 void    send_char(int pid, unsigned char c)
 {
     int bit;
@@ -57,6 +81,7 @@ void    send_string(int pid, unsigned char *s)
 {
     int i;
 
+    send_size(pid, strlen(s));
     i = -1;
     while(s[++i])
         send_char(pid, s[i]);
@@ -80,9 +105,6 @@ int main(int argc, char **argv)
     sigaddset(&sig.sa_mask, SIGUSR2);
     sigaction(SIGUSR1, &sig, NULL);
     sigaction(SIGUSR2, &sig, NULL);
-	pid = atoi(argv[1]);
-    if (pid < 0)
-        return (0);
     send_string(pid, argv[2]);
     return (0);
 }

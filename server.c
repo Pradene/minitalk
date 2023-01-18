@@ -24,23 +24,62 @@ int     pow_2(int n)
     return (nb);
 }
 
+void    getlen(int sig, unsigned char **str, int *received)
+{
+    static int  size = 0;
+    static int  i = 0;
+
+    if (sig == SIGUSR1)
+        size += pow_2(i);
+    if (i == 31)
+    {
+        *received = 1;
+        *str = malloc(size + 1);
+        (*str)[size] = 0;
+        size = 0;
+        i = 0;
+        return ;
+    }
+    i++;
+}
+
+void    print(int pid, unsigned char *s)
+{
+    printf("%s\n", s);
+    free(s);
+    kill(pid, SIGUSR2);
+}
+
 void    handle_signal(int sig, siginfo_t *client, void *ucontext)
 {
     (void)ucontext;
+    static unsigned char    *str;
     static unsigned char    c = 0;
     static int              i = 8;
+    static int              curr = 0;
+    static int              received = 0;
 
-    if (i < 0)
-        c = 0;
-    if (i < 0)
-        i = 8;
-    if (sig == SIGUSR1)
-        c += pow_2(i);
-    i--;
-    if (c && i < 0)
-        write(1, &c, 1);
-    else if (!c && i < 0)
-        kill(client->si_pid, SIGUSR2);
+    if (!received)
+        getlen(sig, &str, &received);
+    else
+    {
+        if (i < 0)
+            c = 0;
+        if (i < 0)
+            i = 8;
+        if (sig == SIGUSR1)
+            c += pow_2(i);
+        i--;
+        if (c && i < 0)
+            str[curr++] = c;
+        else if (!c && i < 0)
+        {
+            i = 8;
+            curr = 0;
+            received = 0;
+            print(client->si_pid, str);
+        }
+    }
     kill(client->si_pid, SIGUSR1);
 }
 
