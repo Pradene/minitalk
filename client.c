@@ -14,13 +14,19 @@
 
 int received = 0;
 
+void    error(char *s)
+{
+    printf("%s\n", s);
+    exit(EXIT_FAILURE);
+}
+
 void    handle_signal(int signal, siginfo_t *client, void *ucontext)
 {
     (void)ucontext;
     if (signal == SIGUSR1)
         received = 1;
     else
-        exit(EXIT_FAILURE);
+        printf("The server received the string\n");
 }
 
 void    send_char(int pid, unsigned char c)
@@ -32,9 +38,15 @@ void    send_char(int pid, unsigned char c)
     {
         received = 0;
         if (bit & c)
-            kill(pid, SIGUSR1);
+        {
+            if (kill(pid, SIGUSR1) == -1)
+                error("Error");
+        }
         else
-            kill(pid, SIGUSR2);
+        {
+            if (kill(pid, SIGUSR2) == -1)
+                error("Error");
+        }
         if (!received)
             pause();
         bit = bit >> 1;
@@ -57,7 +69,10 @@ int main(int argc, char **argv)
     struct sigaction    sig;
 
     if (argc != 3)
-        return (0);
+        error("You have to run the program with : ./client [PID] [STRING]");
+    pid = atoi(argv[1]);
+    if (pid <= 0)
+        error("Invalid PID");
     sig.sa_flags = SA_SIGINFO;
     sig.sa_sigaction = handle_signal;
     sigemptyset(&sig.sa_mask);

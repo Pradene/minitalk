@@ -59,5 +59,5 @@ int main(void)
     pid = getpid();
     printf("%d\n", pid);
     while (1)
-        sleep(1);
+        pause();
 }
