@@ -1,28 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   server.h                                           :+:      :+:    :+:   */
+/*   strlen.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lpradene <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/16 22:38:54 by lpradene          #+#    #+#             */
-/*   Updated: 2023/01/16 22:38:56 by lpradene         ###   ########.fr       */
+/*   Created: 2023/01/31 01:07:24 by lpradene          #+#    #+#             */
+/*   Updated: 2023/01/31 01:07:27 by lpradene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SERVER_H
-# define SERVER_H
+int	ft_strlen(const unsigned char *s)
+{
+	int	i;
 
-//signal
-# include <signal.h>
-
-//getpid
-# include <sys/types.h>
-# include <unistd.h>
-
-//printf
-# include <stdio.h>
-
-# include <stdlib.h>
-
-#endif
+	i = 0;
+	while (s[i])
+		++i;
+	return (i);
+}
