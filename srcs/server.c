@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/server.h"
+#include "../includes/minitalk.h"
 
 int	pow_2(int n)
 {
@@ -80,7 +80,7 @@ void	handle_signal(int sig, siginfo_t *client, void *ucontext)
 
 int	main(void)
 {
-	int					pid;
+	char				*s;
 	struct sigaction	sig;
 
 	sig.sa_flags = SA_SIGINFO;
@@ -90,8 +90,12 @@ int	main(void)
 	sigaddset(&sig.sa_mask, SIGUSR2);
 	sigaction(SIGUSR1, &sig, NULL);
 	sigaction(SIGUSR2, &sig, NULL);
-	pid = getpid();
-	printf("%d\n", pid);
+	s = ft_itoa(getpid());
+	if (!s)
+		exit(EXIT_FAILURE);
+	write(1, s, ft_strlen((unsigned char *)s));
+	write(1, "\n", 1);
+	free(s);
 	while (1)
 		pause();
 }

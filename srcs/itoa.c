@@ -1,24 +1,49 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   server.h                                           :+:      :+:    :+:   */
+/*   itoa.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lpradene <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/16 22:38:54 by lpradene          #+#    #+#             */
-/*   Updated: 2023/01/16 22:38:56 by lpradene         ###   ########.fr       */
+/*   Created: 2023/02/06 03:02:19 by lpradene          #+#    #+#             */
+/*   Updated: 2023/02/06 03:02:21 by lpradene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SERVER_H
-# define SERVER_H
+#include "../includes/minitalk.h"
 
-# include <signal.h>
-# include <sys/types.h>
-# include <unistd.h>
-# include <stdlib.h>
-# include <stdio.h>
+static int	count(int n)
+{
+	int	len;
 
-int	ft_strlen(const unsigned char *s);
+	len = 0;
+	while (n)
+	{
+		n /= 10;
+		len++;
+	}
+	return (len);
+}
 
-#endif
+char	*ft_itoa(int n)
+{
+	int		i;
+	int		len;
+	char	*a;
+
+	i = n;
+	len = count(n);
+	a = malloc(sizeof(char) + (len + 1));
+	if (!a)
+		return (NULL);
+	a[len] = '\0';
+	if (!n)
+		a[0] = '0';
+	while (i > 0)
+	{
+		--len;
+		a[len] = i % 10 + '0';
+		i = i / 10;
+	}
+	return (a);
+}

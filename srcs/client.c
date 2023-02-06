@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/client.h"
+#include "../includes/minitalk.h"
 
 int	g_received = 0;
 
@@ -89,7 +89,10 @@ int	main(int argc, char **argv)
 	struct sigaction	sig;
 
 	if (argc != 3)
+	{
+		write(1, "Invalid arguments : ./client PID STRING\n", 41);
 		exit(EXIT_FAILURE);
+	}
 	pid = atoi(argv[1]);
 	if (pid <= 0)
 		exit(EXIT_FAILURE);

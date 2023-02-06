@@ -12,7 +12,8 @@
 
 SRCS_C	= srcs/client.c
 SRCS_S	= srcs/server.c
-UTILS	= srcs/strlen.c
+UTILS	= srcs/strlen.c \
+			srcs/itoa.c
 
 CC		= cc
 
@@ -26,6 +27,8 @@ OBJS_S = $(SRCS_S:.c=.o)
 OBJS_U = $(UTILS:.c=.o)
 
 all: server client
+
+$(NAME): all
 
 server: $(OBJS_S) $(OBJS_U)
 	$(CC) $(OBJS_S) $(OBJS_U) -o $(SERVER)
