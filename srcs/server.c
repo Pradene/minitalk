@@ -12,25 +12,13 @@
 
 #include "../includes/minitalk.h"
 
-int	pow_2(int n)
-{
-	int	nb;
-
-	if (n == 0)
-		return (1);
-	nb = 2;
-	while (--n)
-		nb *= 2;
-	return (nb);
-}
-
 void	getlen(int sig, unsigned char **str, int *received)
 {
 	static int	size = 0;
 	static int	i = 0;
 
 	if (sig == SIGUSR1)
-		size += pow_2(i);
+		size |= 1 << i;
 	i++;
 	if (i == 32)
 	{
@@ -65,7 +53,7 @@ void	handle_signal(int sig, siginfo_t *client, void *ucontext)
 		if (i == 0)
 			c = 0;
 		if (sig == SIGUSR1)
-			c += pow_2(i);
+			c |= 1 << i;
 		i = (i + 1) % 8;
 		if (c && i == 0)
 			str[curr++] = c;
